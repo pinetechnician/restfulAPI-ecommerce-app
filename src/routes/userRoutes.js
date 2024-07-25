@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const userController = require('../controllers/userController');
+const ensureAuthenticated = require('../middleware/auth');
 const router = express.Router();
 
 router.post('/register', userController.register);
@@ -26,5 +27,9 @@ router.get('/profile', (req, res) => {
         res.send('You are not authenticated.');
     }
 });
+
+router.get('/:userId', ensureAuthenticated, userController.getUserById);
+
+router.put('/:userId', ensureAuthenticated, userController.updateUserById);
 
 module.exports = router;
