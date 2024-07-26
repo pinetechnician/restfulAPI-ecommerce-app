@@ -3,7 +3,7 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       session = require('express-session'),
       passport = require('./config/passport'),
-      routes = require('./routes'),
+      routes = require('./routes/index'),
       app = express();
 
 const PORT = process.env.PORT || 3000;

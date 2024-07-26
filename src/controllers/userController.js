@@ -1,4 +1,3 @@
-const { Query } = require('pg');
 const pool = require('../config/database');
 const bcrypt = require('bcrypt');
 
