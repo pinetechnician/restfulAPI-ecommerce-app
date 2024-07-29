@@ -6,8 +6,8 @@ This is an e-commerce REST API built with Node.js, Express, and PostgreSQL.
 
 ### Prerequisites
 
-- Node.js (version X.X.X)
-- PostgreSQL (version X.X.X)
+- Node.js 
+- PostgreSQL 
 - Git
 
 ### Installation
