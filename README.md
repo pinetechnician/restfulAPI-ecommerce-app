@@ -43,7 +43,7 @@ This is an e-commerce REST API built with Node.js, Express, and PostgreSQL.
 
 ### Usage
 
-- The API documentation is available at `/api-docs` (if using Swagger).
+- The API documentation is available in the swagger folder under swagger.yaml.
 
 ### API Endpoints
 
