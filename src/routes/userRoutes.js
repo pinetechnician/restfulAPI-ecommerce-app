@@ -10,10 +10,6 @@ router.post('/login', passport.authenticate('local', {
     failureRedirect: '/login-failure'
 }));
 
-router.get('/login-success', (req, res) => {
-    res.send('You have successfully logged in.');
-});
-
 router.get('/login-failure', (req, res) => {
     res.send('Login failed.');
 });

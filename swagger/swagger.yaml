@@ -1,0 +1,741 @@
+openapi: 3.0.3
+info:
+  title: RESTful API e-Commerce App
+  version: 1.0.0
+  description: API for E-commerce Application
+paths:
+  /api/users/register:
+    summary: Register a new user
+    description: This path is used to let a new user register an account.
+    post:
+      summary: register a new user
+      description: 'User created /users/login:'
+      operationId: register_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: user
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        '201':
+          description: Default error sample response
+          content:
+            application/json:
+              examples:
+                register user:
+                  value: 'User registered, ID: 1'
+  /api/users/login:
+    summary: Allows users to login
+    description: This path is used to post a user login.
+    post:
+      summary: Login a user
+      description: This allows the user to login to their created account
+      operationId: user_login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        default:
+          description: Default error sample response
+  /api/users/login-failure:
+    summary: Redirect for login failure
+    description: >-
+      Sends a response to the user that the login failed if authentication was
+      not successful.
+    get:
+      summary: Sends the login failed response.
+      description: >-
+        If the authentication of a user's login credential fails, it gets the
+        response that informs the user the login failed.
+      operationId: GET_LOGIN-FAILED
+      responses:
+        default:
+          description: Default error sample response
+  /api/users/profile:
+    summary: Greet the user after login.
+    description: >-
+      Gets the landing page for the user once logged into account with a
+      customized greeting based on username.
+    get:
+      summary: Gets profile data upon login
+      description: >-
+        Returns the profile information response to a user upon successful
+        authentication of login credentials
+      operationId: GET_USER-PROFILE
+      responses:
+        default:
+          description: Default error sample response
+  /api/users/{userId}:
+    summary: Get and update profile data without logging in again.
+    description: >-
+      Allows users to return to their profile page and update their profile
+      information without having to log back in.
+    get:
+      summary: Get user data by user's id.
+      description: >-
+        Allows a user to return to their profile information page without having
+        to log in once again.
+      operationId: GET_USER_BY_USER-ID
+      parameters:
+        - name: userId
+          in: path
+          description: The id of the user.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error sample response
+          content:
+            application/json:
+              examples:
+                User info:
+                  value: |-
+                    {
+                          id: 14,
+                          username: 'testuser7',
+                          email: 'testuser7@example.co.uk',
+                          password: '$2b$10$wj/XqLrDaKuIjSpmnFLHd.Wif60rIhuCMLAEJcgNzBgR2cVBRW/Z6',
+                          created_at: 2024-07-25T18:20:20.092Z,
+                          updated_at: 2024-07-25T18:20:20.092Z
+                        }
+    put:
+      summary: Update user information
+      description: >-
+        Allows a user to change their user information in case their email
+        changes or if they want a new username.
+      operationId: PUT_UPDATE_USER-ID
+      parameters:
+        - name: userId
+          in: path
+          description: The id of the user.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Default error sample response
+          content:
+            application/json:
+              examples:
+                User info:
+                  value: |-
+                    {
+                          id: 14,
+                          username: 'testuser7',
+                          email: 'testuser7@example.com',
+                          password: '$2b$10$wj/XqLrDaKuIjSpmnFLHd.Wif60rIhuCMLAEJcgNzBgR2cVBRW/Z6',
+                          created_at: 2024-07-25T18:20:20.092Z,
+                          updated_at: 2024-07-25T18:20:20.092Z
+                        }
+  /api/products:
+    summary: Get all products and optionally filter by category
+    description: >-
+      This is the path to the products table that retrieves product information
+      as well as add products 
+    get:
+      summary: Get all products or filter by category
+      description: >-
+        This route allows a user to browse all the product offerings or to
+        filter by category if the query is included in the url.
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filter products by category ID
+      operationId: GET_PRODUCTS
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                products:
+                  value: |-
+                    [
+                        {
+                            "id": 22,
+                            "name": "HEART SHAPED WREATH, SET OF TWO,  ON TWIG BASE WITH ROSE HIP,  CREAM RICE BERRIES, AND LEAVES  H 20 IN., L 13.5, H 10 IN., L 8 IN., ROSE HIP, GREEN, CREAM",
+                            "description": "HEART SHAPED WREATH, SET OF TWO,  ON TWIG BASE WITH ROSE HIP,  CREAM RICE BERRIES, AND LEAVES  H 20 IN., L 13.5, H 10 IN., L 8 IN., ROSE HIP, GREEN, CREAM",
+                            "price": "37.40",
+                            "stock": 455,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 23,
+                            "name": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURNT RED, OLIVE, BUTTER, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURNT RED, OLIVE, BUTTER, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 247,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 24,
+                            "name": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 180,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 25,
+                            "name": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, PINK, ORANGE, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, PINK, ORANGE, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 673,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 26,
+                            "name": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, GREEN, CREAM, PINK, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, GREEN, CREAM, PINK, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 122,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 27,
+                            "name": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, MIXED SPRING, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, MIXED SPRING, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 322,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 28,
+                            "name": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, PINK, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, PINK, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 876,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 29,
+                            "name": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, RED, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, RED, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 243,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 30,
+                            "name": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, RED, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, RED, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 765,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 31,
+                            "name": "HEART SHAPED WREATH SET ON TWIG BASE WITH MIXED BERRIES AND HEARTS, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "description": "HEART SHAPED WREATH SET ON TWIG BASE WITH MIXED BERRIES AND HEARTS, 20IN H X 19IN W, 14IN H X 13IN W",
+                            "price": "37.40",
+                            "stock": 123,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 32,
+                            "name": "MIXED BERRY AND HEART WREATH SET OF 2, 19INDIA (10INDIA RIM) & 12INDIA (4INDIA RIM), RED, PINK, CREAM",
+                            "description": "MIXED BERRY AND HEART WREATH SET OF 2, 19INDIA (10INDIA RIM) & 12INDIA (4INDIA RIM), RED, PINK, CREAM",
+                            "price": "35.20",
+                            "stock": 635,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 34,
+                            "name": "VALENTINE WREATH WITH HEARTS ON A TWIG BASE, RED, PINK, 10 IN DIA RIM, HW",
+                            "description": "VALENTINE WREATH WITH HEARTS ON A TWIG BASE, RED, PINK, 10 IN DIA RIM, HW",
+                            "price": "21.00",
+                            "stock": 111,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 36,
+                            "name": "MIXED BERRY AND HEART WREATH WITH HEART SHAPED TWIG BASE, 16 IN H X 14 IN W, RED, PINK",
+                            "description": "MIXED BERRY AND HEART WREATH WITH HEART SHAPED TWIG BASE, 16 IN H X 14 IN W, RED, PINK",
+                            "price": "24.00",
+                            "stock": 659,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 38,
+                            "name": "MIXED BERRY AND HEART WREATH WITH TWIG BASE, 20 IN DIA, 10 IN RIM, RED, PINK",
+                            "description": "MIXED BERRY AND HEART WREATH WITH TWIG BASE, 20 IN DIA, 10 IN RIM, RED, PINK",
+                            "price": "24.00",
+                            "stock": 693,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 35,
+                            "name": "MIXED BERRY AND HEART GARLAND, 5 FEET LONG, RED, PINK",
+                            "description": "MIXED BERRY AND HEART GARLAND, 5 FEET LONG, RED, PINK",
+                            "price": "15.50",
+                            "stock": 989,
+                            "category_id": 2,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 21,
+                            "name": "MIXED BERRY CANDLE RING WITH LARGE BERRIES, RED, 3.5IN RIM (21 IN RIM)",
+                            "description": "MIXED BERRY CANDLE RING WITH LARGE BERRIES, RED, 3.5IN RIM (21 IN RIM)",
+                            "price": "4.40",
+                            "stock": 376,
+                            "category_id": 3,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 33,
+                            "name": "VALENTINE SPRAY WITH HEARTS AND BERRIES, RED, PINK, HW",
+                            "description": "VALENTINE SPRAY WITH HEARTS AND BERRIES, RED, PINK, HW",
+                            "price": "2.80",
+                            "stock": 524,
+                            "category_id": 4,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        },
+                        {
+                            "id": 37,
+                            "name": "MIXED BERRY AND HEART SPRAY, 12 IN, RED, PINK",
+                            "description": "MIXED BERRY AND HEART SPRAY, 12 IN, RED, PINK",
+                            "price": "2.75",
+                            "stock": 421,
+                            "category_id": 4,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        }
+                    ]
+          description: Default error sample response
+  /api/products/{productId}:
+    summary: Search by individual product
+    description: >-
+      This path allows the user to search products by their individual product
+      ID's
+    get:
+      summary: 'Sends the relevant product info '
+      description: >-
+        This path sends back the relevant product info requested by the user
+        based on the product ID in the parameter
+      operationId: GET_PRODUCT-ID
+      parameters:
+        - name: productId
+          in: path
+          description: The id of the product.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                product_by_id:
+                  value: |-
+                    [
+                        {
+                            "id": 22,
+                            "name": "HEART SHAPED WREATH, SET OF TWO,  ON TWIG BASE WITH ROSE HIP,  CREAM RICE BERRIES, AND LEAVES  H 20 IN., L 13.5, H 10 IN., L 8 IN., ROSE HIP, GREEN, CREAM",
+                            "description": "HEART SHAPED WREATH, SET OF TWO,  ON TWIG BASE WITH ROSE HIP,  CREAM RICE BERRIES, AND LEAVES  H 20 IN., L 13.5, H 10 IN., L 8 IN., ROSE HIP, GREEN, CREAM",
+                            "price": "37.40",
+                            "stock": 455,
+                            "category_id": 1,
+                            "created_at": "2024-07-24T21:50:31.759Z",
+                            "updated_at": "2024-07-24T21:50:31.759Z"
+                        }
+                    ]
+          description: Default error sample response
+  /api/cart:
+    summary: Routes for cart info
+    description: Allows a user to interact with their cart
+    post:
+      summary: Adds an item to the cart
+      description: >-
+        This path allows a user to add an item to their cart and to create a
+        cart if one does not exist in the databse
+      operationId: ADD_TO_CART
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: integer
+                  example: 24
+                quantity:
+                  type: integer
+                  example: 48
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                add_item_to_cart:
+                  value: |-
+                    {
+                        "id": 25,
+                        "cart_id": 1,
+                        "product_id": 22,
+                        "quantity": 48
+                    }
+          description: Default error sample response
+    get:
+      summary: Return cart info
+      description: Allows a user to see what's in their cart as well as relevant info
+      operationId: GET_CART
+      responses:
+        default:
+          description: Default error sample response
+  /api/cart/items/{itemId}:
+    summary: Access individual item in cart
+    description: Allows a user to make changes to individual items in their cart
+    delete:
+      summary: Deletes an item in the cart
+      description: >-
+        Allows a user to access an individual item in their cart by itemId and
+        delete that item.
+      operationId: DELETE_ITEM
+      parameters:
+        - name: itemId
+          in: path
+          description: The id of the item in the cart.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                delete_item:
+                  value: |-
+                    {
+                        "id": 25,
+                        "cart_id": 1,
+                        "product_id": 22,
+                        "quantity": 48
+                    }
+          description: Default error sample response
+  /api/cart/{cartId}/checkout:
+    summary: Lets a user checkout
+    description: >-
+      Lets a user checkout once they've put everything they want to order in
+      their cart
+    post:
+      summary: Creates an order
+      description: >-
+        Once the user is ready to checkout, they can navigate here and it posts
+        their cart items and info into an order in the database
+      operationId: CREATE_ORDER
+      parameters:
+        - name: cartId
+          in: path
+          description: The id of the cart.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '201':
+          content:
+            application/json:
+              examples:
+                checkout:
+                  value: |-
+                    {
+                        "message": "Order created successfully",
+                        "orderId": 3
+                    }
+          description: Default error sample response
+  /api/orders:
+    summary: Lets users interact with their orders
+    description: 'Allows a user to see past orders '
+    get:
+      summary: Lets a user see all past orders
+      description: >-
+        Returns the information related to all past orders including the order
+        status, quantities, and total prices
+      operationId: GET_ORDERS
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                orders:
+                  value: |-
+                    [
+                        {
+                            "orderId": 1,
+                            "orderTotal": "11755.20",
+                            "orderStatus": "pending",
+                            "items": [
+                                {
+                                    "itemId": 1,
+                                    "productId": 22,
+                                    "productName": "HEART SHAPED WREATH, SET OF TWO,  ON TWIG BASE WITH ROSE HIP,  CREAM RICE BERRIES, AND LEAVES  H 20 IN., L 13.5, H 10 IN., L 8 IN., ROSE HIP, GREEN, CREAM",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 2,
+                                    "productId": 24,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 3,
+                                    "productId": 24,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 4,
+                                    "productId": 25,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, PINK, ORANGE, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 5,
+                                    "productId": 32,
+                                    "productName": "MIXED BERRY AND HEART WREATH SET OF 2, 19INDIA (10INDIA RIM) & 12INDIA (4INDIA RIM), RED, PINK, CREAM",
+                                    "itemPrice": "1689.60",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 6,
+                                    "productId": 32,
+                                    "productName": "MIXED BERRY AND HEART WREATH SET OF 2, 19INDIA (10INDIA RIM) & 12INDIA (4INDIA RIM), RED, PINK, CREAM",
+                                    "itemPrice": "1689.60",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 7,
+                                    "productId": 35,
+                                    "productName": "MIXED BERRY AND HEART GARLAND, 5 FEET LONG, RED, PINK",
+                                    "itemPrice": "744.00",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 8,
+                                    "productId": 21,
+                                    "productName": "MIXED BERRY CANDLE RING WITH LARGE BERRIES, RED, 3.5IN RIM (21 IN RIM)",
+                                    "itemPrice": "211.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 9,
+                                    "productId": 21,
+                                    "productName": "MIXED BERRY CANDLE RING WITH LARGE BERRIES, RED, 3.5IN RIM (21 IN RIM)",
+                                    "itemPrice": "105.60",
+                                    "quantity": 24
+                                },
+                                {
+                                    "itemId": 10,
+                                    "productId": 33,
+                                    "productName": "VALENTINE SPRAY WITH HEARTS AND BERRIES, RED, PINK, HW",
+                                    "itemPrice": "134.40",
+                                    "quantity": 48
+                                }
+                            ]
+                        },
+                        {
+                            "orderId": 2,
+                            "orderTotal": "8976.00",
+                            "orderStatus": "pending",
+                            "items": [
+                                {
+                                    "itemId": 11,
+                                    "productId": 22,
+                                    "productName": "HEART SHAPED WREATH, SET OF TWO,  ON TWIG BASE WITH ROSE HIP,  CREAM RICE BERRIES, AND LEAVES  H 20 IN., L 13.5, H 10 IN., L 8 IN., ROSE HIP, GREEN, CREAM",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 12,
+                                    "productId": 23,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURNT RED, OLIVE, BUTTER, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 13,
+                                    "productId": 24,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 14,
+                                    "productId": 25,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, PINK, ORANGE, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 15,
+                                    "productId": 26,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, GREEN, CREAM, PINK, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                }
+                            ]
+                        },
+                        {
+                            "orderId": 3,
+                            "orderTotal": "5385.60",
+                            "orderStatus": "pending",
+                            "items": [
+                                {
+                                    "itemId": 16,
+                                    "productId": 22,
+                                    "productName": "HEART SHAPED WREATH, SET OF TWO,  ON TWIG BASE WITH ROSE HIP,  CREAM RICE BERRIES, AND LEAVES  H 20 IN., L 13.5, H 10 IN., L 8 IN., ROSE HIP, GREEN, CREAM",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 17,
+                                    "productId": 23,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURNT RED, OLIVE, BUTTER, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                },
+                                {
+                                    "itemId": 18,
+                                    "productId": 26,
+                                    "productName": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, GREEN, CREAM, PINK, 20IN H X 19IN W, 14IN H X 13IN W",
+                                    "itemPrice": "1795.20",
+                                    "quantity": 48
+                                }
+                            ]
+                        }
+                    ]
+          description: Default error sample response
+  /api/orders/{orderId}:
+    summary: Interact with individual order
+    description: Allows a user to interact with an individual order by order id.
+    get:
+      summary: Lets a user see an order
+      description: Returns all relevant info about a users individual order by orderId.
+      operationId: GET_ORDER-ID
+      parameters:
+        - name: orderId
+          in: path
+          description: The id of the order.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                order_by_id:
+                  value: |-
+                    {
+                        "orderId": 2,
+                        "items": [
+                            {
+                                "itemId": 11,
+                                "productId": 22,
+                                "productName": "HEART SHAPED WREATH, SET OF TWO,  ON TWIG BASE WITH ROSE HIP,  CREAM RICE BERRIES, AND LEAVES  H 20 IN., L 13.5, H 10 IN., L 8 IN., ROSE HIP, GREEN, CREAM",
+                                "itemPrice": "1795.20",
+                                "quantity": 48
+                            },
+                            {
+                                "itemId": 12,
+                                "productId": 23,
+                                "productName": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURNT RED, OLIVE, BUTTER, 20IN H X 19IN W, 14IN H X 13IN W",
+                                "itemPrice": "1795.20",
+                                "quantity": 48
+                            },
+                            {
+                                "itemId": 13,
+                                "productId": 24,
+                                "productName": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, CREAM, 20IN H X 19IN W, 14IN H X 13IN W",
+                                "itemPrice": "1795.20",
+                                "quantity": 48
+                            },
+                            {
+                                "itemId": 14,
+                                "productId": 25,
+                                "productName": "HEART SHAPED WREATH ON TWIG BASE W/ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, BURGUNDY, PINK, ORANGE, 20IN H X 19IN W, 14IN H X 13IN W",
+                                "itemPrice": "1795.20",
+                                "quantity": 48
+                            },
+                            {
+                                "itemId": 15,
+                                "productId": 26,
+                                "productName": "HEART SHAPED WREATH ON TWIG BASE WITH ROSE HIP, RICE BERRIES AND LEAVES, SET OF 2, GREEN, CREAM, PINK, 20IN H X 19IN W, 14IN H X 13IN W",
+                                "itemPrice": "1795.20",
+                                "quantity": 48
+                            }
+                        ],
+                        "orderTotal": "8976.00",
+                        "orderStatus": "pending"
+                    }
+          description: Default error sample response
