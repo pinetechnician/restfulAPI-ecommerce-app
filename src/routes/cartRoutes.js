@@ -11,4 +11,6 @@ router.delete('/items/:itemId', ensureAuthenticated, cartController.removeItemFr
 
 router.post('/:cartId/checkout', ensureAuthenticated, cartController.checkout);
 
+router.post('/:cartId/finalize-order', ensureAuthenticated, cartController.finalizeOrder);
+
 module.exports = router;

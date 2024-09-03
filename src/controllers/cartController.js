@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const addItemToCart = async (req, res) => {
     const userId = req.user.id;
@@ -102,10 +103,11 @@ const removeItemFromCart = async (req, res) => {
 };
 
 const checkout = async(req, res) => {
-    const userId = req.user.id;
-    const cartId = parseInt(req.params.cartId); 
+    
+    const cartId = parseInt(req.params.cartId);
 
     try {
+        
         const cartResult = await pool.query(
             `SELECT cartitems.product_id, cartitems.quantity,
                     products.name as product_name, products.description as product_description, (products.price * cartitems.quantity) as product_price
@@ -133,7 +135,7 @@ const checkout = async(req, res) => {
             total += item.productPrice;
         }
 
-        const orderResult = await pool.query(
+        /*const orderResult = await pool.query(
             `INSERT INTO orders (user_id, total, status)
             VALUES ($1, $2, 'pending') RETURNING id`, 
             [userId, total]
@@ -152,9 +154,89 @@ const checkout = async(req, res) => {
         await pool.query(
             `DELETE FROM cartitems WHERE cart_id = $1`,
             [cartId]
+        );*/
+
+        // Create a payment intent with Stripe
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(total * 100), // amount in cents
+            currency: 'usd',
+            payment_method_types: ['card'],
+        });
+
+        res.status(201).json({ 
+            message: 'Awaiting card confirmation', 
+            //orderId, 
+            clientSecret: paymentIntent.client_secret, // Pass this to the front-end
+            paymentIntentId: paymentIntent.id
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const finalizeOrder = async (req, res) => {
+    const userId = req.user.id;
+    const { paymentIntentId } = req.body;
+    const cartId = parseInt(req.params.cartId);
+
+    try {
+        // Optionally, retrieve the PaymentIntent to ensure its status
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+        if (paymentIntent.status !== 'succeeded') {
+            return res.status(400).json({ error: 'Payment not successful.' });
+        }
+
+        const cartResult = await pool.query(
+                `SELECT cartitems.product_id, cartitems.quantity,
+                        products.name as product_name, products.description as product_description, (products.price * cartitems.quantity) as product_price
+                 FROM cartitems 
+                 LEFT JOIN products ON cartitems.product_id = products.id
+                 WHERE cartitems.cart_id = $1`,
+                [cartId]
+        );
+    
+        if (cartResult.rows.length === 0) {
+                // If no cart or items exist, return a response indicating an empty cart
+                return res.status(200).json({ message: 'Your cart is empty.' });
+        }
+    
+        const cartItems = cartResult.rows.map(row => ({
+                productId: row.product_id,
+                productName: row.product_name,
+                productDescription: row.product_description,
+                productPrice: parseFloat(row.product_price),
+                quantity: row.quantity
+        }));
+    
+        let total = 0;
+        for (const item of cartItems) {
+                total += item.productPrice;
+        }
+    
+        const orderResult = await pool.query(
+                `INSERT INTO orders (user_id, total, status)
+                VALUES ($1, $2, 'pending') RETURNING id`, 
+                [userId, total]
+        );
+    
+        const orderId = orderResult.rows[0].id;
+    
+        for (const item of cartItems) {
+                await pool.query(
+                    `INSERT INTO orderitems (order_id, product_id, quantity, price)
+                    VALUES ($1, $2, $3, $4)`,
+                    [orderId, item.productId, item.quantity, item.productPrice]
+                );
+        }
+    
+        await pool.query(
+                `DELETE FROM cartitems WHERE cart_id = $1`,
+                [cartId]
         );
 
-        res.status(201).json({ message: 'Order created successfully', orderId });
+       
+
+        res.status(200).json({ success: true, orderId });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -164,6 +246,7 @@ module.exports = {
     addItemToCart,
     getCart,
     removeItemFromCart,
-    checkout
+    checkout,
+    finalizeOrder
 };
 

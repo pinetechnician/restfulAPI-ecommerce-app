@@ -4,9 +4,12 @@ const express = require('express'),
       session = require('express-session'),
       passport = require('./config/passport'),
       routes = require('./routes/index'),
-      app = express();
+      cors = require('cors');
+const app = express();
 
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
 
 app.use(bodyParser.json());
 
