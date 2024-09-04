@@ -1,0 +1,21 @@
+/* src/components/Profile.module.css */
+.profileForm {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .profileForm label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .profileForm input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }

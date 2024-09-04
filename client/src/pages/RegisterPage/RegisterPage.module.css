@@ -1,0 +1,31 @@
+/* src/pages/RegisterPage.module.css */
+* {
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 0 auto;
+}
+  
+input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px 0px 8px 8px;
+}
+  
+button {
+    width: 95%;
+    align-self: center;
+    padding: 10px;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
