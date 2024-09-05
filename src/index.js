@@ -4,10 +4,13 @@ const express = require('express'),
       session = require('express-session'),
       passport = require('./config/passport'),
       routes = require('./routes/index'),
-      cors = require('cors');
+      cors = require('cors'),
+      helmet = require('helmet');
 const app = express();
 
 const PORT = process.env.PORT || 4000;
+
+app.use(helmet());
 
 app.use(cors());
 

@@ -4,13 +4,14 @@ import axios from 'axios';
 
 // Thunk to fetch user profile
 export const fetchUserProfile = createAsyncThunk('profile/fetchUserProfile', async () => {
-  const response = await axios.get('/api/users/profile');
+  const response = await axios.get('/api/api/users/profile');
   return response.data;
 });
 
 // Thunk to update user profile
 export const updateUserProfile = createAsyncThunk('profile/updateUserProfile', async (userData) => {
-  const response = await axios.put('/api/users/profile', userData);
+  const { userId, ...rest } = userData;
+  const response = await axios.put(`/api/api/users/${userId}`, rest);
   return response.data;
 });
 

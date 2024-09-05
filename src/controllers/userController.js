@@ -1,7 +1,27 @@
 const pool = require('../config/database');
 const bcrypt = require('bcrypt');
+const Joi = require('joi');
+
+// Define validation schema using Joi
+const registerSchema = Joi.object({
+    username: Joi.string()
+        .trim()
+        .pattern(/^[a-zA-Z0-9_-]+$/)
+        .min(3)
+        .max(30)
+        .required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required() // Enforce password length or complexity
+});
 
 const register = async (req, res) => {
+    // Validate the input against the schema
+    const { error } = registerSchema.validate(req.body);
+    
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+
     const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
@@ -17,6 +37,13 @@ const register = async (req, res) => {
 };
 
 const getUserById = (req, res) => {
+    // Validate the input against the schema
+    const { error } = registerSchema.validate(req.body);
+    
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+    
     const userId = parseInt(req.params.userId);
   
     if (isNaN(userId)) {

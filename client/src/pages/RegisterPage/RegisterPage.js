@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import validator from 'validator';
 import { registerUser } from '../../api/api';
+import { useNavigate } from 'react-router-dom';
 import styles from './RegisterPage.module.css';
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,11 +14,100 @@ const RegisterPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const handleUsernameChange = (e) => {
+    const value = e.target.value.trim();
+    setUsername(value);
+    setSuccess('');
+    
+    const alphanumericPattern = /^[a-zA-Z0-9_]+$/; // Only letters, numbers, and underscores
+    
+    // Validate username
+    if (value.length < 3 || value.length > 30) {
+      setError('Username must be between 3 and 30 characters long.');
+    } else if (!alphanumericPattern.test(value)) {
+      setError('Username must contain only letters, numbers, and underscores.');
+    } else {
+      setError(''); // No error
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    setSuccess('');
+
+    // Validate email using validator
+    if (!validator.isEmail(value)) {
+      setError('Please enter a valid email address.');
+    } else {
+      setError('');
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    setSuccess('');
+
+    // Validate password length
+    if (value.length < 8) {
+      setError('Password must be at least 8 characters long.');
+    } else if (value !== confirmPassword) {
+      setError('Passwords do not match.')
+    } else {
+      setError(''); // No error
+    }
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const value = e.target.value;
+    setConfirmPassword(value);
+    setSuccess('');
+
+    // Validate password length
+    if (value !== password) {
+      setError('Passwords do not match.')
+    } else {
+      setError(''); // No error
+    }
+  };
+
+  // Regular expression pattern for username validation
+  const usernamePattern = /^[a-zA-Z0-9_-]+$/;
+
+  const validateInputs = () => {
+    // Validate username
+    if (!username.match(usernamePattern)) {
+      setError('Username can only contain alphanumeric characters, underscores, and hyphens.');
+      return false;
+    }
+    if (username.length < 3 || username.length > 30) {
+      setError('Username must be between 3 and 30 characters long.');
+      return false;
+    }
+
+    // Validate password
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return false;
+    }
+
+    // Check password confirmation
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return false;
+    }
+
+    // Reset error if all validations pass
+    setError('');
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError("Passwords don't match");
-      return;
+    // Validate inputs before dispatching the action
+    if (!validateInputs()) {
+        return;
     }
 
     try {
@@ -26,6 +118,7 @@ const RegisterPage = () => {
       });
       setSuccess('Registration successful! You can now log in.');
       setError('');
+      navigate('/login');
     } catch (err) {
       setError(err.response.data.error || 'An error occurred');
     }
@@ -44,7 +137,7 @@ const RegisterPage = () => {
             className={styles.input}
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleUsernameChange}
             required
           />
         </div>
@@ -55,7 +148,7 @@ const RegisterPage = () => {
             className={styles.input}
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
           />
         </div>
@@ -66,7 +159,7 @@ const RegisterPage = () => {
             className={styles.input}
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
           />
         </div>
@@ -77,7 +170,7 @@ const RegisterPage = () => {
             className={styles.input}
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleConfirmPasswordChange}
             required
           />
         </div>

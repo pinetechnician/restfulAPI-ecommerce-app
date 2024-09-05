@@ -5,17 +5,28 @@
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
-  }
+}
   
-  .profileForm label {
+.profileForm label {
     display: block;
     margin-bottom: 5px;
-  }
+}
   
-  .profileForm input {
+.profileForm input {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
+}
+
+.passwordToggle {
+    width: 50%;
+    background-color: transparent;
+    color: gray;
+    padding: 5px 5px 10px;
+}
+
+.passwordToggle:hover {
+    color: 	#484848;
+}

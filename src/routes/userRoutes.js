@@ -18,7 +18,7 @@ router.post('/login', (req, res, next) => {
                 return next(err);
             }
             // On success, return the user data as JSON
-            return res.json({ message: 'Login successful', user: { username: user.username, email: user.email } });
+            return res.json({ message: 'Login successful', user: { username: user.username, email: user.email, userId: user.id } });
         });
     })(req, res, next);
 });
