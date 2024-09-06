@@ -12,7 +12,10 @@ const PORT = process.env.PORT || 4000;
 
 app.use(helmet());
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Change to the origin of your frontend
+    credentials: true, // Allows sending cookies with cross-origin requests
+}));
 
 app.use(bodyParser.json());
 
@@ -23,9 +26,14 @@ app.use(session({
     cookie: { 
         secure: false,
         httpOnly: true,
-        sameSite: 'strict' 
+        sameSite: 'lax' 
     }
 }));
+
+app.use((req, res, next) => {
+    console.log('Session:', req.session);
+    next();
+  });
 
 app.use(passport.initialize());
 app.use(passport.session());

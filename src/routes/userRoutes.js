@@ -56,4 +56,24 @@ router.get('/:userId', ensureAuthenticated, userController.getUserById);
 
 router.put('/:userId', ensureAuthenticated, userController.updateUserById);
 
+router.post('/logout', (req, res, next) => {
+    if (req.isAuthenticated()) {
+      // Destroy the session after logout
+      req.logout(function(err) {
+        if (err) { return next(err); }
+        
+        // Destroy the session
+        req.session.destroy(function(err) {
+          if (err) return next(err);
+          
+          // Clear the session cookie
+          res.clearCookie('connect.sid');
+          res.status(200).send({ message: 'Logged out successfully' });
+        });
+      });
+    } else {
+      res.status(400).send({ message: 'No active session' });
+    }
+});
+
 module.exports = router;

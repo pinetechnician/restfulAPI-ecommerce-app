@@ -23,6 +23,32 @@ describe('User API', () => {
       expect(response.body.message).toMatch(/User registered/);
     });
 
+    it('should return error if email already exists', async () => {
+        const res = await request(app)
+          .post('/api/users/register')
+          .send({
+            username: 'testUser1',
+            email: 'testuser@example.com',  // Assuming this email already exists
+            password: 'testPassword123'
+          });
+    
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toBe('Email already exists');  
+    });
+
+    it('should return error if username already exists', async () => {
+        const response = await request(app)
+            .post('/api/users/register')
+            .send({
+                username: 'testuser',  // Existing username
+                email: 'uniqueemail@example.com',  
+                password: 'password123'
+            });
+        
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Username already exists');
+    });
+
     it('should return an error if required fields are missing', async () => {
       const response = await request(app)
         .post('/api/users/register')

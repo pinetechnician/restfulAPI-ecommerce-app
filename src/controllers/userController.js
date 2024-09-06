@@ -32,7 +32,15 @@ const register = async (req, res) => {
         console.log(result);
         res.status(201).json(`User registered, ID: ${result.rows[0].id}`);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        if (error.code === '23505') {
+            if (error.detail.includes('email')) {
+                res.status(400).json({ error: 'Email already exists' });
+            } else if (error.detail.includes('username')) {
+                res.status(400).json({ error: 'Username already exists' });
+            }
+        } else {
+            res.status(500).json({ error: error.message });
+        }
     }
 };
 
@@ -43,7 +51,7 @@ const getUserById = (req, res) => {
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }
-    
+
     const userId = parseInt(req.params.userId);
   
     if (isNaN(userId)) {

@@ -3,13 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css'; // Optional: Style for the NavBar
 
 const NavBar = ({ isLoggedIn, onLogout, cartItemCount }) => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    onLogout(); // Call the logout function passed as a prop
-    navigate('/login'); // Redirect to login after logout
-  };
-
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarLogo}>
@@ -31,7 +24,7 @@ const NavBar = ({ isLoggedIn, onLogout, cartItemCount }) => {
               <Link to="/profile">My Account</Link>
             </li>
             <li>
-              <button onClick={handleLogout} className={styles.logoutButton}>
+              <button onClick={onLogout} className={styles.logoutButton}>
                 Logout
               </button>
             </li>

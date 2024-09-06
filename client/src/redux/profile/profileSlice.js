@@ -1,6 +1,7 @@
 // src/redux/profileSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 // Thunk to fetch user profile
 export const fetchUserProfile = createAsyncThunk('profile/fetchUserProfile', async () => {
