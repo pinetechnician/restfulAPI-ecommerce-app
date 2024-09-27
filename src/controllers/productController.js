@@ -3,11 +3,11 @@ const pool = require('../config/database'); // assuming you have a db.js file th
 // Get all products, optionally filter by category
 const getProducts = (req, res) => {
   const categoryId = req.query.category;
-  let query = 'SELECT * FROM products';
+  let query = 'SELECT products.* FROM products';
   const params = [];
 
   if (categoryId) {
-    query += ' WHERE category_id = $1';
+    query += ' JOIN product_categories AS pc ON products.id = pc.product_id JOIN categories AS ct ON pc.category_id = ct.id WHERE ct.id = $1';
     params.push(categoryId);
   }
 
