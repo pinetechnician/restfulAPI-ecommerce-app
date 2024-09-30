@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts } from '../../redux/products/productsSlice';  // Path might differ
+import { fetchProducts, searchProducts } from '../../redux/products/productsSlice';  // Path might differ
 import { fetchCategories } from '../../redux/categories/categoriesSlice';
 import styles from './ProductsPage.module.css';  // Assuming you will add some styles
 
@@ -10,6 +10,7 @@ const ProductsPage = () => {
     const { categories } = useSelector((state) => state.categories);
 
     const [selectedCategoryId, setSelectedCategoryId] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         dispatch(fetchProducts());
@@ -20,7 +21,7 @@ const ProductsPage = () => {
     useEffect(() => {
         if (selectedCategoryId !== '') {
             dispatch(fetchProducts(selectedCategoryId));
-        } else {
+        } else if (!searchTerm) {
             dispatch(fetchProducts());
         }
     }, [selectedCategoryId]);
@@ -28,6 +29,18 @@ const ProductsPage = () => {
     const handleCategoryChange = (event) => {
         const categoryId = event.target.value;
         setSelectedCategoryId(categoryId);
+        setSearchTerm('');  // Clear search term when a category is selected
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            setSelectedCategoryId('');
+            dispatch(searchProducts(searchTerm));
+        } else {
+            setSelectedCategoryId('');  // Reset category selection when search is performed
+            dispatch(fetchProducts());
+        }
     };
 
     if (loading) return <p>Loading...</p>;
@@ -36,6 +49,17 @@ const ProductsPage = () => {
     return (
         <div className={styles.productsPage}>
         <h1>Our Products</h1>
+
+         {/* Search Input */}
+         <form onSubmit={handleSearch}>
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search by item number or description..."
+                />
+                <button type="submit">Search</button>
+            </form>
 
         {/* Category Dropdown */}
         <select value={selectedCategoryId} onChange={handleCategoryChange}>

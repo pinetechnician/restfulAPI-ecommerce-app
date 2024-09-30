@@ -31,7 +31,29 @@ const getProductById = (req, res) => {
   });
 };
 
+const searchProducts = async (req, res) => {
+  const searchQuery = req.query.searchQuery || '';
+  
+  try {
+      // Perform SQL query to search by description or item number
+      const result = await pool.query(
+        `SELECT * FROM products WHERE description ILIKE $1 OR item_number ILIKE $1`, 
+        [`%${searchQuery}%`]
+      );
+
+      if (result.rows.length === 0) {
+          return res.status(404).json({ message: 'No products found.' });
+      }
+
+      res.status(200).json(result.rows);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error.' });
+  }
+}
+
 module.exports = {
   getProducts,
   getProductById,
+  searchProducts,
 };
