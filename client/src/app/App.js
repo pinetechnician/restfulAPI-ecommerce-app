@@ -10,6 +10,7 @@ import NavBar from '../components/Navbar/NavBar';
 import Login from '../pages/LoginPage/LoginPage';
 import Profile from '../pages/ProfilePage/ProfilePage';
 import ProductsPage from '../pages/ProductsPage/ProductsPage';
+import ProductDetails from '../pages/ProductDetails/ProductDetails';
 import PrivateRoute from '../components/PrivateRoute/PrivateRoute';
 import { useNavigate } from 'react-router-dom'; 
 
@@ -41,6 +42,7 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
       </Routes>
     </>
   );

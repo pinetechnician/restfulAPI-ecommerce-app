@@ -1,0 +1,15 @@
+.productDetails {
+    text-align: center;
+}
+
+.productDetails img {
+    max-width: 300px;
+}
+
+.productDetails h1 {
+    font-size: 2rem;
+}
+
+.productDetails p {
+    margin: 10px 0;
+}

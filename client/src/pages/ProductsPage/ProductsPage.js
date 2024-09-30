@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { fetchProducts, searchProducts } from '../../redux/products/productsSlice';  // Path might differ
 import { fetchCategories } from '../../redux/categories/categoriesSlice';
 import styles from './ProductsPage.module.css';  // Assuming you will add some styles
@@ -74,8 +75,10 @@ const ProductsPage = () => {
         <div className={styles.productsGrid}>
             {products.map((product) => (
             <div key={product.id} className={styles.productCard}>
-                <img src={product.image} alt={product.name} />
-                <h2>{product.name}</h2>
+                <Link to={`/products/${product.id}`}>
+                    <img src={product.image} alt={product.name} />
+                    <h2>{product.name}</h2>
+                </Link>
                 <p>{product.description}</p>
                 <p>${product.price}</p>
             </div>

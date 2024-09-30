@@ -18,10 +18,17 @@ export const searchProducts = createAsyncThunk('products/searchProducts', async 
   return response.data;
 });
 
+export const fetchProductById = createAsyncThunk('products/fetchProductById', async (id) => {
+  const response = await axios.get(`/api/api/products/${id}`);
+  console.log(response);
+  return response.data;
+});
+
 const productsSlice = createSlice({
   name: 'products',
   initialState: {
     products: [],
+    product: null,
     loading: false,
     error: null,
   },
@@ -40,16 +47,29 @@ const productsSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(searchProducts.pending, (state) => {
-          state.loading = true;
-          state.error = null;
+        state.loading = true;
+        state.error = null;
       })
       .addCase(searchProducts.fulfilled, (state, action) => {
-          state.loading = false;
-          state.products = action.payload;
+        state.loading = false;
+        state.products = action.payload;
       })
       .addCase(searchProducts.rejected, (state, action) => {
-          state.loading = false;
-          state.error = action.error.message;
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(fetchProductById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.product = action.payload;
+        console.log(`state.product:`, JSON.stringify(state.product, null, 2));
+      })
+      .addCase(fetchProductById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
