@@ -11,13 +11,14 @@ import Login from '../pages/LoginPage/LoginPage';
 import Profile from '../pages/ProfilePage/ProfilePage';
 import ProductsPage from '../pages/ProductsPage/ProductsPage';
 import ProductDetails from '../pages/ProductDetails/ProductDetails';
+import Cart from '../pages/CartPage/CartPage';
 import PrivateRoute from '../components/PrivateRoute/PrivateRoute';
 import { useNavigate } from 'react-router-dom'; 
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const cartItemCount = 3;
+  const cartItemCount = useSelector((state) => state.cart.totalAmount);
   const navigate = useNavigate(); // Use navigate inside the Router
 
   const handleLogout = async () => {
@@ -43,6 +44,7 @@ const AppRoutes = () => {
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/products/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </>
   );

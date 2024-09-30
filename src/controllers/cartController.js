@@ -4,6 +4,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const addItemToCart = async (req, res) => {
     const userId = req.user.id;
     const { productId, quantity } = req.body;
+    console.log('productId: ', productId);
 
     try {
         // Check if the user already has a cart
@@ -44,7 +45,7 @@ const getCart = async (req, res) => {
         // Perform a single query to get the cart and its items with product details
         const result = await pool.query(
             `SELECT carts.id as cart_id, cartitems.id as item_id, cartitems.product_id, cartitems.quantity,
-                    products.name as product_name, products.description as product_description, products.price as product_price
+                    products.description as product_name, products.item_number as item_number, products.price1 as product_price
              FROM carts
              LEFT JOIN cartitems ON carts.id = cartitems.cart_id
              LEFT JOIN products ON cartitems.product_id = products.id

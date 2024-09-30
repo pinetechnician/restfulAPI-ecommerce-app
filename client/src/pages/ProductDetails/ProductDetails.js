@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProductById } from '../../redux/products/productsSlice';
+import { addToCart } from '../../redux/currentCart/currentCart';
 import styles from './ProductDetails.module.css'; // Assuming you will add some styles
 
 const ProductDetails = () => {
@@ -17,6 +18,10 @@ const ProductDetails = () => {
         }
     }, [dispatch, id]);
 
+    const handleAddToCart = () => {
+        dispatch(addToCart({ productId: product[0].id, quantity: 1 }));
+      };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -29,8 +34,8 @@ const ProductDetails = () => {
                     <p>{product[0].description}</p>
                     <p>Price: ${product[0].price}</p>
                     <p>Item Number: {product[0].item_number}</p>
-                    {product.availability ? <p>Availability: Sold Out</p> : <p>Availability: In stock</p>}
-                    {/* Add other relevant details */}
+                    {product[0].availability ? <p>Availability: Sold Out</p> : <p>Availability: In stock</p>}
+                    <button onClick={handleAddToCart}>Add to Cart</button>
                 </>
             ) : (
                 <p>Product not found.</p>
