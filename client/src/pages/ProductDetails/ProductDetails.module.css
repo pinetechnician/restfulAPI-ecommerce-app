@@ -1,5 +1,7 @@
 .productDetails {
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .productDetails img {
@@ -12,4 +14,41 @@
 
 .productDetails p {
     margin: 10px 0;
+}
+
+.productDetails input {
+    align-self: center;
+    max-width: 75px;
+}
+
+.productDetails button {
+    max-width: 100px;
+    align-self: center;
+}
+
+.pricingTable {
+    max-width: 350px;
+    border-collapse: collapse;
+    margin: 20px 0;
+    align-self: center;
+}
+
+.pricingTable th, 
+.pricingTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.pricingTable th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.pricingTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.pricingTable tr:hover {
+    background-color: #f1f1f1;
 }
