@@ -38,9 +38,7 @@ const cartSlice = createSlice({
         console.log(action.payload.items);
         if (state.items[0].itemId == null) {
             state.totalAmount = 0
-        } else {
-            state.totalAmount = action.payload.items.length;
-        }
+        } 
         console.log(state.items);
       })
       .addCase(fetchCart.rejected, (state, action) => {
@@ -68,6 +66,8 @@ const cartSlice = createSlice({
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.loading = false;
         //console.log('cart items: ', state.items);
+        console.log(JSON.stringify(action.payload));
+        state.totalAmount -= action.payload.quantity;
         if (state.items.length === 0) {
             state.totalAmount = 0;
         }
