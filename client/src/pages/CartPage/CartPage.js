@@ -19,7 +19,7 @@ const Cart = () => {
   return (
     <div>
       <h1>Your Cart</h1>
-      {items.length === 0 ? (
+      {totalAmount === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
         <div>
