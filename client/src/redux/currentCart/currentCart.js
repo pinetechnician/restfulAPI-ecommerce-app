@@ -20,6 +20,7 @@ export const removeFromCart = createAsyncThunk('cart/removeFromCart', async (pro
 const cartSlice = createSlice({
   name: 'cart',
   initialState: {
+    cartId: null,
     items: [],
     totalAmount: 0,
     loading: false,
@@ -35,7 +36,8 @@ const cartSlice = createSlice({
       .addCase(fetchCart.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload.items;
-        console.log(action.payload.items);
+        state.cartId = action.payload.cartId;
+        console.log(action.payload);
         if (state.items[0].itemId == null) {
             state.totalAmount = 0
         } 

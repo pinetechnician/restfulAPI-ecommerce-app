@@ -12,6 +12,7 @@ import Profile from '../pages/ProfilePage/ProfilePage';
 import ProductsPage from '../pages/ProductsPage/ProductsPage';
 import ProductDetails from '../pages/ProductDetails/ProductDetails';
 import Cart from '../pages/CartPage/CartPage';
+import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import PrivateRoute from '../components/PrivateRoute/PrivateRoute';
 import { useNavigate } from 'react-router-dom'; 
 
@@ -44,7 +45,8 @@ const AppRoutes = () => {
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/products/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart" element={<Cart isLoggedIn={isLoggedIn} />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
       </Routes>
     </>
   );

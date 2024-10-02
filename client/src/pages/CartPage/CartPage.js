@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, removeFromCart } from '../../redux/currentCart/currentCart';
 
-const Cart = () => {
+const Cart = ({ isLoggedIn }) => {
   const dispatch = useDispatch();
   const { items, totalAmount } = useSelector(state => state.cart);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchCart());
@@ -15,6 +16,10 @@ const Cart = () => {
     await dispatch(removeFromCart(productId));
     dispatch(fetchCart());
   };
+
+  const handleCheckoutClick = () => {
+    navigate('/checkout');
+  }
 
   return (
     <div>
@@ -31,6 +36,11 @@ const Cart = () => {
             </div>
           ))}
           <p>Total: ${totalAmount}</p>
+          {isLoggedIn && (
+            <button onClick={handleCheckoutClick}>
+            Proceed to Checkout
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -111,7 +111,7 @@ const checkout = async(req, res) => {
         
         const cartResult = await pool.query(
             `SELECT cartitems.product_id, cartitems.quantity,
-                    products.name as product_name, products.description as product_description, (products.price * cartitems.quantity) as product_price
+                    products.description as product_name, products.item_number as item_number, (products.price1 * cartitems.quantity) as product_price
              FROM cartitems 
              LEFT JOIN products ON cartitems.product_id = products.id
              WHERE cartitems.cart_id = $1`,
@@ -126,7 +126,7 @@ const checkout = async(req, res) => {
         const cartItems = cartResult.rows.map(row => ({
             productId: row.product_id,
             productName: row.product_name,
-            productDescription: row.product_description,
+            productDescription: row.item_number,
             productPrice: parseFloat(row.product_price),
             quantity: row.quantity
         }));
