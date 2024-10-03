@@ -10,6 +10,8 @@ const stripePromise = loadStripe('pk_test_51Pv2hUAh0rCB3FEGAT2O3Vk14zVPoBmbS8huP
 const CheckoutPage = () => {
   const [paymentIntentId, setPaymentIntentId] = useState(null);
   const cartId = useSelector((state) => state.cart.cartId);
+  const cartItems = useSelector((state) => state.cart.items); 
+  const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
     // Call your backend to create the PaymentIntent and get the ID
@@ -17,6 +19,7 @@ const CheckoutPage = () => {
       const response = await fetch(`/api/api/cart/${cartId}/checkout`, { method: 'POST' });
       const data = await response.json();
       setPaymentIntentId(data.paymentIntentId);
+      setTotalAmount(data.total);
     };
 
     createPaymentIntent();
@@ -28,13 +31,35 @@ const CheckoutPage = () => {
   };
 
   return (
-    <Elements stripe={stripePromise}>
-      {paymentIntentId ? (
-        <CheckoutForm paymentIntentId={paymentIntentId} onPaymentSuccess={handlePaymentSuccess} />
-      ) : (
-        <p>Loading payment details...</p>
-      )}
-    </Elements>
+    <div className="checkout-container">
+      <h2>Checkout</h2>
+
+      {/* Display Cart Items */}
+      <div className="cart-summary">
+        <h3>Your Items</h3>
+        <ul>
+          {cartItems.map((item) => (
+            <li key={item.product_id}>
+              <p>{item.product_name} - Qty: {item.quantity}</p>
+              <p>${item.product_price.toFixed(2)}</p>
+            </li>
+          ))}
+        </ul>
+        <h3>Total: ${totalAmount.toFixed(2)}</h3>
+      </div>
+
+      <Elements stripe={stripePromise}>
+        {paymentIntentId ? (
+          <CheckoutForm 
+            paymentIntentId={paymentIntentId} 
+            onPaymentSuccess={handlePaymentSuccess}
+            totalAmount={totalAmount} 
+          />
+        ) : (
+          <p>Loading payment details...</p>
+        )}
+      </Elements>
+    </div>
   );
 };
 

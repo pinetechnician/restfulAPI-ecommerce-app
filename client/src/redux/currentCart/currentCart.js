@@ -22,6 +22,7 @@ const cartSlice = createSlice({
   initialState: {
     cartId: null,
     items: [],
+    totalQuantity: 0,
     totalAmount: 0,
     loading: false,
     error: null,
@@ -37,6 +38,8 @@ const cartSlice = createSlice({
         state.loading = false;
         state.items = action.payload.items;
         state.cartId = action.payload.cartId;
+        state.totalAmount = action.payload.totalAmount;
+        state.totalQuantity = action.payload.totalQuantity;
         console.log(action.payload);
         if (state.items[0].itemId == null) {
             state.totalAmount = 0
@@ -53,9 +56,20 @@ const cartSlice = createSlice({
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.items.push(action.payload);
-        state.totalAmount += action.payload.quantity;
-        //console.log(JSON.stringify(state.items));
+        // Find the existing item in the state (if it exists)
+        const existingItem = state.items.find(item => item.product_id === action.payload.product_id);
+
+        if (existingItem) {
+        // Update the existing item's quantity
+        existingItem.quantity = action.payload.quantity;
+        } else {
+          // Add the new item to the state
+          state.items.push(action.payload);
+        }
+
+        // Update total quantity and total amount
+        state.totalQuantity = state.items.reduce((total, item) => total + item.quantity, 0);
+        state.totalAmount = state.items.reduce((total, item) => total + item.product_price * item.quantity, 0);
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;

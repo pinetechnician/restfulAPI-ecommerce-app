@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 
-const CheckoutForm = ({ paymentIntentId, onPaymentSuccess }) => {
+const CheckoutForm = ({ paymentIntentId, onPaymentSuccess, totalAmount }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -54,7 +54,7 @@ const CheckoutForm = ({ paymentIntentId, onPaymentSuccess }) => {
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       
       <button type="submit" disabled={!stripe || isProcessing}>
-        {isProcessing ? 'Processing...' : 'Pay'}
+        {isProcessing ? 'Processing...' : `Pay $${totalAmount.toFixed(2)}`}
       </button>
 
       {paymentSuccess && <div className="success-message">Payment authorized, you will be charged once your order is confirmed!</div>}

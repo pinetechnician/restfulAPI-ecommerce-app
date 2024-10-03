@@ -5,15 +5,15 @@ import { fetchCart, removeFromCart } from '../../redux/currentCart/currentCart';
 
 const Cart = ({ isLoggedIn }) => {
   const dispatch = useDispatch();
-  const { items, totalAmount } = useSelector(state => state.cart);
+  const { items, totalAmount, totalQuantity } = useSelector(state => state.cart);
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
 
-  const handleRemoveFromCart = async (productId) => {
-    await dispatch(removeFromCart(productId));
+  const handleRemoveFromCart = (productId) => {
+    dispatch(removeFromCart(productId));
     dispatch(fetchCart());
   };
 
@@ -24,14 +24,14 @@ const Cart = ({ isLoggedIn }) => {
   return (
     <div>
       <h1>Your Cart</h1>
-      {totalAmount === 0 ? (
+      {totalQuantity === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
         <div>
           {items.map(item => (
             <div key={item.itemId}>
               <h2>{item.productName}</h2>
-              <p>{item.price} x {item.quantity}</p>
+              <p>${item.unitPrice} x {item.quantity}</p>
               <button onClick={() => handleRemoveFromCart(item.itemId)}>Remove</button>
             </div>
           ))}

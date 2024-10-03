@@ -24,11 +24,28 @@ const addItemToCart = async (req, res) => {
 
         cartId = cartResult.rows[0].id;
 
-        // Add the item to the cart
-        const result = await pool.query(
-            'INSERT INTO cartitems (cart_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *',
-            [cartId, productId, quantity]
+        // Check if the product is already in the cart
+        const existingItemResult = await pool.query(
+            'SELECT id, quantity FROM cartitems WHERE cart_id = $1 AND product_id = $2',
+            [cartId, productId]
         );
+
+        let result;
+
+        if (existingItemResult.rows.length > 0) {
+            // Product already in the cart, so update the quantity
+            const newQuantity = existingItemResult.rows[0].quantity + quantity;
+            result = await pool.query(
+                'UPDATE cartitems SET quantity = $1 WHERE id = $2 RETURNING *',
+                [newQuantity, existingItemResult.rows[0].id]
+            );
+        } else {
+            // Product not in the cart, so insert a new row
+            result = await pool.query(
+                'INSERT INTO cartitems (cart_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *',
+                [cartId, productId, quantity]
+            );
+        }
         console.log(result);
 
         res.status(201).json(result.rows[0]);
@@ -45,7 +62,17 @@ const getCart = async (req, res) => {
         // Perform a single query to get the cart and its items with product details
         const result = await pool.query(
             `SELECT carts.id as cart_id, cartitems.id as item_id, cartitems.product_id, cartitems.quantity,
-                    products.description as product_name, products.item_number as item_number, products.price1 as product_price
+                    products.description as product_name, products.item_number as item_number, 
+                    CASE
+                        WHEN cartitems.quantity >= products.qty3 THEN products.price3
+                        WHEN cartitems.quantity >= products.qty2 THEN products.price2
+                        ELSE (products.price1)
+                    END as unit_price,
+                    CASE
+                        WHEN cartitems.quantity >= products.qty3 THEN (CAST(products.price3 AS NUMERIC) * cartitems.quantity)
+                        WHEN cartitems.quantity >= products.qty2 THEN (CAST(products.price2 AS NUMERIC) * cartitems.quantity)
+                        ELSE (CAST(products.price1 AS NUMERIC) * cartitems.quantity)
+                    END as product_price
              FROM carts
              LEFT JOIN cartitems ON carts.id = cartitems.cart_id
              LEFT JOIN products ON cartitems.product_id = products.id
@@ -63,12 +90,23 @@ const getCart = async (req, res) => {
             productId: row.product_id,
             productName: row.product_name,
             productDescription: row.product_description,
+            unitPrice: row.unit_price,
             productPrice: row.product_price,
             quantity: row.quantity
         }));
 
+        let cartQuantity = 0;
+        let cartTotal = 0;
+        
+        for (const item of cartItems) {
+            cartQuantity += Number(item.quantity);
+            cartTotal += Number(item.productPrice); 
+        }
+
         const cartData = {
             cartId: result.rows[0].cart_id,
+            totalQuantity: cartQuantity,
+            totalAmount: cartTotal,
             items: cartItems
         };
 
@@ -111,7 +149,12 @@ const checkout = async(req, res) => {
         
         const cartResult = await pool.query(
             `SELECT cartitems.product_id, cartitems.quantity,
-                    products.description as product_name, products.item_number as item_number, (products.price1 * cartitems.quantity) as product_price
+                    products.description as product_name, products.item_number as item_number, 
+                    CASE
+                        WHEN cartitems.quantity >= products.qty3 THEN (products.price3 * cartitems.quantity)
+                        WHEN cartitems.quantity >= products.qty2 THEN (products.price2 * cartitems.quantity)
+                        ELSE (products.price1 * cartitems.quantity)
+                    END as product_price
              FROM cartitems 
              LEFT JOIN products ON cartitems.product_id = products.id
              WHERE cartitems.cart_id = $1`,
@@ -133,29 +176,8 @@ const checkout = async(req, res) => {
 
         let total = 0;
         for (const item of cartItems) {
-            total += item.productPrice;
+            total += Number(item.productPrice);
         }
-
-        /*const orderResult = await pool.query(
-            `INSERT INTO orders (user_id, total, status)
-            VALUES ($1, $2, 'pending') RETURNING id`, 
-            [userId, total]
-        );
-
-        const orderId = orderResult.rows[0].id;
-
-        for (const item of cartItems) {
-            await pool.query(
-                `INSERT INTO orderitems (order_id, product_id, quantity, price)
-                VALUES ($1, $2, $3, $4)`,
-                [orderId, item.productId, item.quantity, item.productPrice]
-            );
-        }
-
-        await pool.query(
-            `DELETE FROM cartitems WHERE cart_id = $1`,
-            [cartId]
-        );*/
 
         // Create a payment intent with Stripe
         const paymentIntent = await stripe.paymentIntents.create({
@@ -166,6 +188,7 @@ const checkout = async(req, res) => {
 
         res.status(201).json({ 
             message: 'Awaiting card confirmation', 
+            total: total,
             //orderId, 
             clientSecret: paymentIntent.client_secret, // Pass this to the front-end
             paymentIntentId: paymentIntent.id

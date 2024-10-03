@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 const AppRoutes = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const cartItemCount = useSelector((state) => state.cart.totalAmount);
+  const cartItemCount = useSelector((state) => state.cart.totalQuantity);
   const navigate = useNavigate(); // Use navigate inside the Router
 
   const handleLogout = async () => {
