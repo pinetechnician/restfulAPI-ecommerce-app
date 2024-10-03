@@ -9,6 +9,7 @@ const stripePromise = loadStripe('pk_test_51Pv2hUAh0rCB3FEGAT2O3Vk14zVPoBmbS8huP
 
 const CheckoutPage = () => {
   const [paymentIntentId, setPaymentIntentId] = useState(null);
+  const [clientSecret, setClientSecret] = useState(null);
   const cartId = useSelector((state) => state.cart.cartId);
   const cartItems = useSelector((state) => state.cart.items); 
   const [totalAmount, setTotalAmount] = useState(0);
@@ -19,11 +20,14 @@ const CheckoutPage = () => {
       const response = await fetch(`/api/api/cart/${cartId}/checkout`, { method: 'POST' });
       const data = await response.json();
       setPaymentIntentId(data.paymentIntentId);
+      setClientSecret(data.clientSecret);
       setTotalAmount(data.total);
     };
 
     createPaymentIntent();
-  }, []);
+  }, [cartId]);
+
+  console.log(typeof cartId);
 
   const handlePaymentSuccess = (paymentIntent) => {
     console.log('Payment authorized, PaymentIntent:', paymentIntent);
@@ -40,12 +44,12 @@ const CheckoutPage = () => {
         <ul>
           {cartItems.map((item) => (
             <li key={item.product_id}>
-              <p>{item.product_name} - Qty: {item.quantity}</p>
-              <p>${item.product_price.toFixed(2)}</p>
+              <p>{item.productName} - Qty: {item.quantity}</p>
+              <p>${item.productPrice}</p>
             </li>
           ))}
         </ul>
-        <h3>Total: ${totalAmount.toFixed(2)}</h3>
+        <h3>Total: ${totalAmount}</h3>
       </div>
 
       <Elements stripe={stripePromise}>
@@ -54,6 +58,8 @@ const CheckoutPage = () => {
             paymentIntentId={paymentIntentId} 
             onPaymentSuccess={handlePaymentSuccess}
             totalAmount={totalAmount} 
+            cartId={cartId}
+            clientSecret={clientSecret}
           />
         ) : (
           <p>Loading payment details...</p>

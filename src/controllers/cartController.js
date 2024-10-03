@@ -184,6 +184,7 @@ const checkout = async(req, res) => {
             amount: Math.round(total * 100), // amount in cents
             currency: 'usd',
             payment_method_types: ['card'],
+            capture_method: 'manual',
         });
 
         res.status(201).json({ 
@@ -206,13 +207,18 @@ const finalizeOrder = async (req, res) => {
     try {
         // Optionally, retrieve the PaymentIntent to ensure its status
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-        if (paymentIntent.status !== 'succeeded') {
+        if (paymentIntent.status !== 'requires_capture') {
             return res.status(400).json({ error: 'Payment not successful.' });
         }
 
         const cartResult = await pool.query(
                 `SELECT cartitems.product_id, cartitems.quantity,
-                        products.name as product_name, products.description as product_description, (products.price * cartitems.quantity) as product_price
+                        products.description as product_name, products.item_number as item_number, 
+                        CASE
+                            WHEN cartitems.quantity >= products.qty3 THEN (products.price3 * cartitems.quantity)
+                            WHEN cartitems.quantity >= products.qty2 THEN (products.price2 * cartitems.quantity)
+                            ELSE (products.price1 * cartitems.quantity)
+                        END as product_price
                  FROM cartitems 
                  LEFT JOIN products ON cartitems.product_id = products.id
                  WHERE cartitems.cart_id = $1`,
@@ -227,14 +233,14 @@ const finalizeOrder = async (req, res) => {
         const cartItems = cartResult.rows.map(row => ({
                 productId: row.product_id,
                 productName: row.product_name,
-                productDescription: row.product_description,
+                productDescription: row.item_number,
                 productPrice: parseFloat(row.product_price),
                 quantity: row.quantity
         }));
     
         let total = 0;
         for (const item of cartItems) {
-                total += item.productPrice;
+                total += Number(item.productPrice);
         }
     
         const orderResult = await pool.query(
