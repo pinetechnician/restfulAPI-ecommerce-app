@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import { useNavigate } from 'react-router-dom';
 
 const CheckoutForm = ({ paymentIntentId, onPaymentSuccess, totalAmount, cartId, clientSecret }) => {
   const stripe = useStripe();
@@ -7,6 +8,7 @@ const CheckoutForm = ({ paymentIntentId, onPaymentSuccess, totalAmount, cartId, 
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -59,7 +61,8 @@ const CheckoutForm = ({ paymentIntentId, onPaymentSuccess, totalAmount, cartId, 
             onPaymentSuccess(paymentIntent);
           }
           setIsProcessing(false);
-          return;
+
+          navigate('/order-confirmation', { state: { totalAmount, orderId: data.orderId } });
         } else {
           setErrorMessage(data.error || 'Failed to finalize the order.');
           setIsProcessing(false);
