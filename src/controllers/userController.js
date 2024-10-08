@@ -72,7 +72,20 @@ const getUserById = (req, res) => {
 
 const updateUserById = async (req, res) => {
     const userId = parseInt(req.params.userId);
-    const { username, email, password } = req.body;
+    const { 
+        username, 
+        email, 
+        password, 
+        storeName, 
+        firstName, 
+        lastName, 
+        phoneNumber, 
+        address, 
+        city, 
+        zipcode, 
+        country, 
+        state 
+    } = req.body;
 
     if (isNaN(userId)) {
         return res.status(400).json({ error: 'Invalid user ID' });
@@ -99,6 +112,51 @@ const updateUserById = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         updateFields.push('password = $' + (updateFields.length + 1));
         updateValues.push(hashedPassword);
+    }
+
+    if (storeName) {
+        updateFields.push('store_name = $' + (updateFields.length + 1));
+        updateValues.push(storeName);
+    }
+
+    if (firstName) {
+        updateFields.push('first_name = $' + (updateFields.length + 1));
+        updateValues.push(firstName);
+    }
+
+    if (lastName) {
+        updateFields.push('last_name = $' + (updateFields.length + 1));
+        updateValues.push(lastName);
+    }
+
+    if (phoneNumber) {
+        updateFields.push('phone_number = $' + (updateFields.length + 1));
+        updateValues.push(phoneNumber);
+    }
+
+    if (address) {
+        updateFields.push('address = $' + (updateFields.length + 1));
+        updateValues.push(address);
+    }
+
+    if (city) {
+        updateFields.push('city = $' + (updateFields.length + 1));
+        updateValues.push(city);
+    }
+
+    if (zipcode) {
+        updateFields.push('zipcode = $' + (updateFields.length + 1));
+        updateValues.push(zipcode);
+    }
+
+    if (country) {
+        updateFields.push('country = $' + (updateFields.length + 1));
+        updateValues.push(country);
+    }
+
+    if (state) {
+        updateFields.push('state = $' + (updateFields.length + 1));
+        updateValues.push(state);
     }
 
     if (updateFields.length === 0) {

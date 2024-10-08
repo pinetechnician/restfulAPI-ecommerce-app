@@ -143,7 +143,7 @@ const CheckoutForm = ({ paymentIntentId, onPaymentSuccess, totalAmount, cartId, 
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={styles.checkoutForm} onSubmit={handleSubmit}>
         <div className={styles.formField}>
             <label>Name</label>
             <input
@@ -166,6 +166,7 @@ const CheckoutForm = ({ paymentIntentId, onPaymentSuccess, totalAmount, cartId, 
             {formErrors.email && <span className={styles.error}>{formErrors.email}</span>}
         </div>
 
+        <div className={styles.twoColumn}>
         <div className={styles.formField}>
             <label>Address</label>
             <input
@@ -187,7 +188,9 @@ const CheckoutForm = ({ paymentIntentId, onPaymentSuccess, totalAmount, cartId, 
             />
             {formErrors.city && <span className={styles.error}>{formErrors.city}</span>}
         </div>
+        </div>
 
+        <div className={styles.twoColumn}>
         <div className={styles.formField}>
             <label>State</label>
             <input
@@ -209,8 +212,9 @@ const CheckoutForm = ({ paymentIntentId, onPaymentSuccess, totalAmount, cartId, 
             />
             {formErrors.zipcode && <span className={styles.error}>{formErrors.zipcode}</span>}
         </div>
+        </div>
 
-        <div className={styles.formField}>
+        <div className={styles.cardField}>
             <label>Card Details</label>
             <CardElement options={{ hidePostalCode: true }} onChange={handleCardChange}/>
             {cardError && <span className={styles.error}>{cardError}</span>}

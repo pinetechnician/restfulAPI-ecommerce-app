@@ -37,6 +37,16 @@ router.get('/profile', (req, res) => {
         res.json({
             username: req.user.username,
             email: req.user.email,
+            userId: req.user.id,
+            storeName: req.user.store_name,
+            firstName: req.user.first_name,
+            lastName: req.user.last_name,
+            phoneNumber: req.user.phone_number,
+            address: req.user.address,
+            city: req.user.city,
+            zipcode: req.user.zipcode,
+            country: req.user.country,
+            state: req.user.state,
         });
     } else {
         res.status(401).json({ error: 'You are not authenticated' });
