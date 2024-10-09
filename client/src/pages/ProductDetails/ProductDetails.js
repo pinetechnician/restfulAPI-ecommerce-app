@@ -16,11 +16,14 @@ const ProductDetails = () => {
     useEffect(() => {
         if (id) {
             dispatch(fetchProductById(id));
-            if (product) {
-                setQuantity(product[0].qty1)
-            }
         }
     }, [dispatch, id]);
+
+    useEffect(() => {
+        if (product && product[0]) {
+            setQuantity(product[0].qty1);  // Set the initial quantity to qty1
+        }
+    }, [product]);
 
     const handleBlur = () => {
         if (product && product[0] && quantity < product[0].qty1) {
