@@ -21,6 +21,9 @@ const NavBar = ({ isLoggedIn, onLogout, cartItemCount }) => {
         {isLoggedIn ? (
           <>
             <li>
+              <Link to="/orders">Orders</Link>
+            </li>
+            <li>
               <Link to="/profile">My Account</Link>
             </li>
             <li>

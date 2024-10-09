@@ -14,6 +14,7 @@ import ProductDetails from '../pages/ProductDetails/ProductDetails';
 import Cart from '../pages/CartPage/CartPage';
 import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import OrderConfirmation from '../pages/OrderConfirmation/OrderConfirmation';
+import OrdersPage from '../pages/OrdersPage/OrdersPage';
 import PrivateRoute from '../components/PrivateRoute/PrivateRoute';
 import { useNavigate } from 'react-router-dom'; 
 
@@ -49,6 +50,7 @@ const AppRoutes = () => {
         <Route path="/cart" element={<Cart isLoggedIn={isLoggedIn} />} />
         <Route path="/checkout" element={<PrivateRoute><CheckoutPage /></PrivateRoute>} />
         <Route path="/order-confirmation" element={<PrivateRoute><OrderConfirmation /></PrivateRoute>} />
+        <Route path="/orders" element={<PrivateRoute><OrdersPage /></PrivateRoute>} />
       </Routes>
     </>
   );

@@ -53,14 +53,14 @@ const ProductsPage = () => {
 
          {/* Search Input */}
          <form onSubmit={handleSearch}>
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search by item number or description..."
-                />
-                <button type="submit">Search</button>
-            </form>
+            <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by item number or description..."
+            />
+            <button type="submit">Search</button>
+        </form>
 
         {/* Category Dropdown */}
         <select value={selectedCategoryId} onChange={handleCategoryChange}>
