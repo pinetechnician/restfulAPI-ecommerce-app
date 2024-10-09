@@ -7,7 +7,7 @@ const getOrders = async (req, res) => {
         let ordersResult = await pool.query(
             `SELECT orders.id AS order_id, orders.total AS order_total, orders.status AS order_status, orders.created_at AS created_at,
                 orderitems.id AS item_id, orderitems.product_id AS product_id, orderitems.quantity AS quantity, 
-                orderitems.price AS item_price, products.description AS product_name
+                orderitems.price AS item_price, products.description AS product_name, products.item_number AS item_number
             FROM orders
             LEFT JOIN orderitems ON orders.id = orderitems.order_id
             LEFT JOIN products ON orderitems.product_id = products.id
@@ -35,6 +35,7 @@ const getOrders = async (req, res) => {
                 itemId: row.item_id,
                 productId: row.product_id,
                 productName: row.product_name,
+                itemNumber: row.item_number,
                 itemPrice: row.item_price,
                 quantity: row.quantity
             });
@@ -53,9 +54,9 @@ const getOrderById = async (req, res) => {
 
     try {
         let ordersResult = await pool.query(
-            `SELECT orders.id AS order_id, orders.total AS order_total, orders.status AS order_status,
+            `SELECT orders.id AS order_id, orders.total AS order_total, orders.status AS order_status, orders.created_at AS created_at,
                 orderitems.id AS item_id, orderitems.product_id AS product_id, orderitems.quantity AS quantity, 
-                orderitems.price AS item_price, products.name AS product_name
+                orderitems.price AS item_price, products.description AS product_name, products.item_number AS item_number
             FROM orders
             LEFT JOIN orderitems ON orders.id = orderitems.order_id
             LEFT JOIN products ON orderitems.product_id = products.id
@@ -72,6 +73,7 @@ const getOrderById = async (req, res) => {
             itemId: row.item_id,
             productId: row.product_id,
             productName: row.product_name,
+            itemNumber: row.item_number,
             itemPrice: row.item_price,
             quantity: row.quantity
         }));
@@ -80,7 +82,8 @@ const getOrderById = async (req, res) => {
             orderId: ordersResult.rows[0].order_id,
             items: orderItems,
             orderTotal: ordersResult.rows[0].order_total,
-            orderStatus: ordersResult.rows[0].order_status
+            orderStatus: ordersResult.rows[0].order_status,
+            createdAt: ordersResult.rows[0].created_at
         };
 
         res.status(200).json(orderData);
