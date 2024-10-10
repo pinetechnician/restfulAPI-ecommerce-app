@@ -1,8 +1,9 @@
 // App.js
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { checkSession } from '../redux/auth/authSlice';
+import { fetchCart } from '../redux/currentCart/currentCart';
 import { logoutFromServer } from '../api/api';
 import { logout } from '../redux/auth/authSlice';
 import RegisterPage from '../pages/RegisterPage/RegisterPage';
@@ -24,6 +25,14 @@ const AppRoutes = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const cartItemCount = useSelector((state) => state.cart.totalQuantity);
   const navigate = useNavigate(); // Use navigate inside the Router
+
+  useEffect(() => {
+    dispatch(checkSession());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
 
   const handleLogout = async () => {
     try {

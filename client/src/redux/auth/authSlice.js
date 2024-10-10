@@ -12,6 +12,11 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (credentials, 
   }
 });
 
+export const checkSession = createAsyncThunk('auth/checkSession', async () => {
+  const response = await axios.get('/api/api/user/session');
+  return response.data;
+});
+
 // Auth slice 
 const authSlice = createSlice({
   name: 'auth',
@@ -41,6 +46,24 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(checkSession.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(checkSession.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.isAuthenticated) {
+          state.isLoggedIn = true;
+          state.user = action.payload.user;
+        } else {
+          state.isLoggedIn = false;
+          state.user = null;
+        }
+      })
+      .addCase(checkSession.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        state.isLoggedIn = false;
       });
   },
 });
