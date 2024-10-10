@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import validator from 'validator';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfile, updateUserProfile } from '../../redux/profile/profileSlice';
+import { fetchCart } from '../../redux/currentCart/currentCart';
 import styles from './ProfilePage.module.css';
 
 const Profile = () => {
@@ -28,6 +29,7 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch(fetchUserProfile());
+    dispatch(fetchCart);
   }, [dispatch]);
 
   useEffect(() => {

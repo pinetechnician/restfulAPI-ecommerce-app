@@ -32,6 +32,7 @@ passport.deserializeUser(async (id, done) => {
     const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
     //console.log('result: ', result);
     const user = result.rows[0];
+
     if (user) {
         done(null, user);
     } else {

@@ -1,6 +1,7 @@
 // src/redux/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 // Thunk to handle login
 export const loginUser = createAsyncThunk('auth/loginUser', async (credentials, { rejectWithValue }) => {
@@ -13,8 +14,8 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (credentials, 
 });
 
 export const checkSession = createAsyncThunk('auth/checkSession', async () => {
-  const response = await axios.get('/api/api/user/session');
-  return response.data;
+    const response = await axios.get('/api/api/users/session');
+    return response.data;
 });
 
 // Auth slice 
@@ -48,13 +49,13 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(checkSession.pending, (state) => {
-        state.loading = true;
+        state.loading = false;
       })
       .addCase(checkSession.fulfilled, (state, action) => {
         state.loading = false;
         if (action.payload.isAuthenticated) {
           state.isLoggedIn = true;
-          state.user = action.payload.user;
+          //state.user = action.payload.user;
         } else {
           state.isLoggedIn = false;
           state.user = null;

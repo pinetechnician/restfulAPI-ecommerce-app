@@ -49,17 +49,26 @@ router.get('/profile', (req, res) => {
     }
 });
 
+router.get('/session', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ 
+            isAuthenticated: true, 
+            user: {
+                username: req.user.username,
+                email: req.user.email,
+                userId: req.user.id,
+            }
+         });
+    } else { 
+        res.json({ isAuthenticated: false });
+    }
+});
+
 router.get('/:userId', ensureAuthenticated, userController.getUserById);
 
 router.put('/:userId', ensureAuthenticated, userController.updateUserById);
 
-router.get('/session', ensureAuthenticated, (req, res) =>{
-    if (req.session.user) {
-        res.json({ isAuthenticate: true, user: req.session.user })
-    } else { 
-        res.json({ isAuthenticated: false })
-    }
-});
+
 
 router.post('/logout', (req, res, next) => {
     if (req.isAuthenticated()) {
