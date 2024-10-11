@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { fetchOrders, fetchOrderById } from '../../redux/orders/ordersSlice';
+import withSessionCheck from '../../components/WithSessionCheck/WithSessionCheck';
 import styles from './OrderDetails.module.css';
 
 const OrderDetails = () => {
@@ -46,4 +47,4 @@ const OrderDetails = () => {
     );
 };
 
-export default OrderDetails;
+export default withSessionCheck(OrderDetails);

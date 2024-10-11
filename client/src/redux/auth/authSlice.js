@@ -13,9 +13,15 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (credentials, 
   }
 });
 
-export const checkSession = createAsyncThunk('auth/checkSession', async () => {
-    const response = await axios.get('/api/api/users/session');
-    return response.data;
+export const checkSession = createAsyncThunk('auth/checkSession', async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/api/api/users/session');
+      console.log('checkSession res: ', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Session check error:', error.response || error.message);
+      return rejectWithValue(error.response?.data || error.message);
+    }
 });
 
 // Auth slice 
@@ -23,8 +29,8 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
-    isLoggedIn: false,
-    loading: false,
+    isLoggedIn: null,
+    loading: true,
     error: null,
   },
   reducers: {
@@ -56,6 +62,7 @@ const authSlice = createSlice({
         if (action.payload.isAuthenticated) {
           state.isLoggedIn = true;
           //state.user = action.payload.user;
+          console.log('auth state: ', JSON.stringify(state));
         } else {
           state.isLoggedIn = false;
           state.user = null;

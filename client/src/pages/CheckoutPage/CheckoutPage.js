@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from '../../components/CheckoutForm/CheckoutForm';
+import withSessionCheck from '../../components/WithSessionCheck/WithSessionCheck';
 
 // Load Stripe
 const stripePromise = loadStripe('pk_test_51Pv2hUAh0rCB3FEGAT2O3Vk14zVPoBmbS8huPvUtdSVCplQCaF6k04MgFgh20YaqzLqDk6uhxEDTmTI5pQbClF3t000EGSAmCm');
@@ -69,4 +70,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default withSessionCheck(CheckoutPage);

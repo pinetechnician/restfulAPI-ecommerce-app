@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchOrders } from '../../redux/orders/ordersSlice';
+import withSessionCheck from '../../components/WithSessionCheck/WithSessionCheck';
 import styles from './OrdersPage.module.css';
 
 const OrdersPage = () => {
@@ -32,4 +33,4 @@ const OrdersPage = () => {
     );
 };
 
-export default OrdersPage;
+export default withSessionCheck(OrdersPage);

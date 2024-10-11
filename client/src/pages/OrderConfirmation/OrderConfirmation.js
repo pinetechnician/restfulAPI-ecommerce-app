@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import withSessionCheck from '../../components/WithSessionCheck/WithSessionCheck';
 import styles from './OrderConfirmation.module.css';
 
 const OrderConfirmation = () => {
@@ -24,4 +25,4 @@ const OrderConfirmation = () => {
   );
 };
 
-export default OrderConfirmation;
+export default withSessionCheck(OrderConfirmation);

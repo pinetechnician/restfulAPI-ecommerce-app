@@ -4,6 +4,7 @@ import validator from 'validator';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfile, updateUserProfile } from '../../redux/profile/profileSlice';
 import { fetchCart } from '../../redux/currentCart/currentCart';
+import withSessionCheck from '../../components/WithSessionCheck/WithSessionCheck';
 import styles from './ProfilePage.module.css';
 
 const Profile = () => {
@@ -370,4 +371,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default withSessionCheck(Profile);

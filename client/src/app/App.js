@@ -22,13 +22,14 @@ import { useNavigate } from 'react-router-dom';
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const {loading, isLoggedIn} = useSelector((state) => state.auth);
   const cartItemCount = useSelector((state) => state.cart.totalQuantity);
   const navigate = useNavigate(); // Use navigate inside the Router
 
   useEffect(() => {
     dispatch(checkSession());
-  }, [dispatch]);
+    console.log("session check App.js: ", isLoggedIn);
+  }, []);
 
   useEffect(() => {
     dispatch(fetchCart());
@@ -44,6 +45,7 @@ const AppRoutes = () => {
     }
   };
 
+  if (loading) return <div>Loading...</div>;
   return (
     <>
       <NavBar 
@@ -54,14 +56,14 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart isLoggedIn={isLoggedIn} />} />
-        <Route path="/checkout" element={<PrivateRoute><CheckoutPage /></PrivateRoute>} />
-        <Route path="/order-confirmation" element={<PrivateRoute><OrderConfirmation /></PrivateRoute>} />
-        <Route path="/orders" element={<PrivateRoute><OrdersPage /></PrivateRoute>} />
-        <Route path="/orders/:id" element={<PrivateRoute><OrderDetails /></PrivateRoute>} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/orders/:id" element={<OrderDetails />} />
         <Route path="*" element={<Navigate to="/products" />} />
       </Routes>
     </>
