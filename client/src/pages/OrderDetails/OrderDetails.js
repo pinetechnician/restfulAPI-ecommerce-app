@@ -26,19 +26,21 @@ const OrderDetails = () => {
                 <>
                     <h1>Order Id: {order.orderId}</h1>
                     <h2>Created at: {new Date(order.createdAt).toLocaleDateString()}</h2>
-                    <h3>Status: {order.orderStatus}</h3>
+                    
                     <ul>
                     {order.items.map((item) => (
                         <li>
                             <strong>{item.productName}</strong>
                             
-                            <p>{item.itemNumber}</p>
-                            <p>{item.quantity}</p>
-                            <p>{item.itemPrice}</p>
+                            <p>Item number: {item.itemNumber}</p>
+                            <p>Quantity: {item.quantity}</p>
+                            <p>Price: ${item.itemPrice}</p>
                             
                         </li>
                     ))}
                     </ul>
+                    <h2>Total: ${order.orderTotal}</h2>
+                    <h3>Status: {order.orderStatus}</h3>
                 </>
             ) : (
                 <p>Order not found.</p>

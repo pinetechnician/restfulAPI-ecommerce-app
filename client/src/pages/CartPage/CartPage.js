@@ -35,7 +35,7 @@ const Cart = ({ isLoggedIn }) => {
               <button onClick={() => handleRemoveFromCart(item.itemId)}>Remove</button>
             </div>
           ))}
-          <p>Total: ${totalAmount}</p>
+          <p>Total: ${totalAmount.toFixed(2)}</p>
           {isLoggedIn && (
             <button onClick={handleCheckoutClick}>
             Proceed to Checkout

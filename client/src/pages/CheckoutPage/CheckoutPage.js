@@ -50,7 +50,7 @@ const CheckoutPage = () => {
             </li>
           ))}
         </ul>
-        <h3>Total: ${totalAmount}</h3>
+        <h3>Total: ${totalAmount.toFixed(2)}</h3>
       </div>
 
       <Elements stripe={stripePromise}>
