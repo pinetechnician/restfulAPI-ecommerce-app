@@ -1,86 +1,124 @@
 /* NavBar.module.css */
 
+/* Main NavBar styling */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: wrap; /* Ensure it wraps when content grows */
+  min-height: 64px;
+}
+
+/* Logo styling */
+.navbarLogo a {
+  text-decoration: none;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  position: absolute;
+  top: 18px;
+  left: 20px;
+}
+
+/* Hamburger icon for mobile */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 6px;
+  top: 14px;
+}
+
+/* Links in the nav */
+.navbarLinks {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.navbarLinks li {
+  margin-left: 20px;
+}
+
+.navbarLinks a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  padding: 8px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.navbarLinks a:hover {
+  background-color: #444;
+  border-radius: 5px;
+}
+
+/* Logout button styling */
+.logoutButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 8px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.logoutButton:hover {
+  background-color: #444;
+  border-radius: 5px;
+}
+
+/* Remove focus outline on button */
+.logoutButton:focus {
+  outline: none;
+}
+
+/* Mobile view styling */
+@media (max-width: 932px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 47px;
   }
-  
+
   .navbarLogo a {
-    text-decoration: none;
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
+    top: 10px;
   }
-  
+
+  .hamburger {
+    display: block;
+  }
+
   .navbarLinks {
-    list-style-type: none;
-    display: flex;
-    align-items: center;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    width: 100%;
+    background-color: black;
+    padding: 0;
+    margin-bottom: 0;
+    margin-top: 48px;
   }
-  
+
   .navbarLinks li {
-    margin-left: 20px;
+    margin: 20px 0;
   }
-  
+
+  .navbarLinks.active {
+    display: flex; /* When active, show and push down content */
+  }
+
   .navbarLinks a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    padding: 8px 15px;
-    transition: background-color 0.3s ease;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
   }
-  
-  .navbarLinks a:hover {
-    background-color: #444;
-    border-radius: 5px;
-  }
-  
-  .logoutButton {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 8px 15px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .logoutButton:hover {
-    background-color: #444;
-    border-radius: 5px;
-  }
-  
-  .logoutButton:focus {
-    outline: none;
-  }
-  
-  /* For smaller screens */
-  @media (max-width: 768px) {
-    .navbar {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .navbarLinks {
-      flex-direction: column;
-      width: 100%;
-    }
-  
-    .navbarLinks li {
-      margin-left: 0;
-      margin-top: 10px;
-    }
-  
-    .navbarLinks a,
-    .logoutButton {
-      width: 100%;
-      text-align: left;
-    }
-  }
+}

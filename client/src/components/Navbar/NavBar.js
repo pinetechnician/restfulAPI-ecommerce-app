@@ -1,15 +1,27 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css'; // Optional: Style for the NavBar
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 const NavBar = ({ isLoggedIn, onLogout, cartItemCount }) => {
+  const [isActive, setIsActive] = useState(false);
+
+  const handleToggle = () => {
+    setIsActive(!isActive);
+  };
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarLogo}>
         <Link to="/">E-Commerce</Link> {/* Brand or Home link */}
       </div>
       
-      <ul className={styles.navbarLinks}>
+      <div className={styles.hamburger} onClick={handleToggle} aria-label="toggle-navigation">
+        <FontAwesomeIcon icon={faBars} />
+      </div>
+
+      <ul className={`${styles.navbarLinks} ${isActive ? styles.active : ''}`} >
         <li>
           <Link to="/products">Products</Link>
         </li>
