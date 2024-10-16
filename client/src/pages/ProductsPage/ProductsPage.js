@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { fetchProducts, searchProducts } from '../../redux/products/productsSlice';  // Path might differ
 import { fetchCategories } from '../../redux/categories/categoriesSlice';
 import styles from './ProductsPage.module.css';  // Assuming you will add some styles
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 const ProductsPage = () => {
     const dispatch = useDispatch();
@@ -52,14 +54,16 @@ const ProductsPage = () => {
         <h1>Our Products</h1>
 
          {/* Search Input */}
-         <form onSubmit={handleSearch}>
+         <form onSubmit={handleSearch} className={styles.searchContainer} >
             <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by item number or description..."
             />
-            <button type="submit">Search</button>
+            <button type="submit" className={styles.searchButton} >
+                <FontAwesomeIcon icon={faSearch} />
+            </button>
         </form>
 
         {/* Category Dropdown */}
